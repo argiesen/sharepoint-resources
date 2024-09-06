@@ -8,52 +8,52 @@ Try {
     Connect-PnPOnline -Url $SiteURL -Interactive
  
     # Get the Context
-    $Ctx = Get-PnPContext
+    $context = Get-PnPContext
  
     # Exclude certain libraries
-    $ExcludedLists = @("Form Templates", "Preservation Hold Library","Site Assets", "Pages", "Site Pages", "Images",
+    $excludedLists = @("Form Templates", "Preservation Hold Library","Site Assets", "Pages", "Site Pages", "Images",
                             "Site Collection Documents", "Site Collection Images","Style Library")
  
     # Get All document libraries
-    $DocumentLibraries = Get-PnPList | Where-Object {$_.BaseType -eq "DocumentLibrary" -and $_.Title -notin $ExcludedLists -and $_.Hidden -eq $false}
+    $documentLibraries = Get-PnPList | Where-Object {$_.BaseType -eq "DocumentLibrary" -and $_.Title -notin $excludedLists -and $_.Hidden -eq $false}
  
     # Iterate through each document library
-    ForEach($Library in $DocumentLibraries){
-        Write-Host "Processing Document Library:"$Library.Title -f Magenta
+    ForEach($documentLibrary in $documentLibraries){
+        Write-Host "Processing Document Library:"$documentLibrary.Title -f Magenta
  
         # Get All Items from the List - Exclude 'Folder' List Items
-        $ListItems = Get-PnPListItem -List $Library -PageSize 2000 | Where-Object {$_.FileSystemObjectType -eq "File"}
+        $listItems = Get-PnPListItem -List $documentLibrary -PageSize 2000 | Where-Object {$_.FileSystemObjectType -eq "File"}
  
         # Loop through each file
-        ForEach ($Item in $ListItems){
+        ForEach ($item in $listItems){
             # Get File Versions
-            $File = $Item.File
-            $Versions = $File.Versions
-            $Ctx.Load($File)
-            $Ctx.Load($Versions)
-            $Ctx.ExecuteQuery()
+            $file = $item.File
+            $versions = $file.Versions
+            $context.Load($file)
+            $context.Load($versions)
+            $context.ExecuteQuery()
   
-            Write-Host -f Yellow "`tScanning File:"$File.Name
-            $VersionsCount = $Versions.Count
-            $VersionsToDelete = $VersionsCount - $VersionsToKeep
-            If($VersionsToDelete -gt 0){
-                Write-Host -f Cyan "`t Total Number of Versions of the File:" $VersionsCount
-                $VersionCounter = 0
+            Write-Host -f Yellow "`tScanning File:"$file.Name
+            $versionsCount = $versions.Count
+            $versionsToDelete = $versionsCount - $VersionsToKeep
+            If($versionsToDelete -gt 0){
+                Write-Host -f Cyan "`t Total Number of Versions of the File:" $versionsCount
+                $versionCounter = 0
 
                 # Delete versions
-                For($i=0; $i -lt $VersionsToDelete; $i++){
-                    If($Versions[$VersionCounter].IsCurrentVersion){
-                       $VersionCounter++
-                       Write-Host -f Magenta "`t`t Retaining Current Major Version:"$Versions[$VersionCounter].VersionLabel
+                For($i=0; $i -lt $versionsToDelete; $i++){
+                    If($versions[$versionCounter].IsCurrentVersion){
+                       $versionCounter++
+                       Write-Host -f Magenta "`t`t Retaining Current Major Version:"$versions[$versionCounter].VersionLabel
                        Continue
                     }
-                    Write-Host -f Cyan "`t Deleting Version:" $Versions[$VersionCounter].VersionLabel
-                    $Versions[$VersionCounter].DeleteObject()
-                    "{0} : {1} : {2}/{3} (v{4})" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $SiteURL, $Library.Title, $File.Name, $Versions[$VersionCounter].VersionLabel | Out-File VersionDeletion.log -Append
+                    Write-Host -f Cyan "`t Deleting Version:" $versions[$versionCounter].VersionLabel
+                    $versions[$versionCounter].DeleteObject()
+                    "{0} : {1} : {2}/{3} (v{4})" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $SiteURL, $documentLibrary.Title, $file.Name, $versions[$versionCounter].VersionLabel | Out-File VersionDeletion.log -Append
                 }
 
-                $Ctx.ExecuteQuery()
-                Write-Host -f Green "`t Version History is cleaned for the File:"$File.Name
+                $context.ExecuteQuery()
+                Write-Host -f Green "`t Version History is cleaned for the File:"$file.Name
             }
         }
     }
