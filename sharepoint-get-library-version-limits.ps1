@@ -12,7 +12,7 @@ $siteCollections = Get-PnPTenantSite
 $results = @()
 
 # Exclude certain libraries
-$ExcludedLists = @("Form Templates", "Preservation Hold Library","Site Assets", "Pages", "Site Pages", "Images", "Site Collection Documents", "Site Collection Images","Style Library")
+$excludedLists = @("Form Templates", "Preservation Hold Library","Site Assets", "Pages", "Site Pages", "Images", "Site Collection Documents", "Site Collection Images","Style Library")
 
 # Iterate through each site collection
 foreach ($site in $siteCollections) {
@@ -21,24 +21,23 @@ foreach ($site in $siteCollections) {
         Connect-PnPOnline -Url $site.Url -Interactive
         
         # Get the document library settings
-        $docLibs = Get-PnPList | Where-Object { $_.BaseTemplate -eq 101 -and $_.Title -notin $ExcludedLists -and $_.Hidden -eq $false } # BaseTemplate 101 is for document libraries
+        $documentLibraries = Get-PnPList | Where-Object { $_.BaseTemplate -eq 101 -and $_.Title -notin $excludedLists -and $_.Hidden -eq $false } # BaseTemplate 101 is for document libraries
         
-        foreach ($docLib in $docLibs) {
-            # Store the result
+        foreach ($documentLibrary in $documentLibraries) {
+            # Store the successful result
             $results += [PSCustomObject]@{
                 SiteTitle                       = $site.Title
                 SiteUrl                         = $site.Url
-                LibraryName                     = $docLib.Title
-                EnableVersioning                = $docLib.EnableVersioning
-                EnableMinorVersions             = $docLib.EnableMinorVersions
-                MajorVersionLimit               = $docLib.MajorVersionLimit
-                MajorWithMinorVersionsLimit     = $docLib.MajorWithMinorVersionsLimit
+                LibraryName                     = $documentLibrary.Title
+                EnableVersioning                = $documentLibrary.EnableVersioning
+                EnableMinorVersions             = $documentLibrary.EnableMinorVersions
+                MajorVersionLimit               = $documentLibrary.MajorVersionLimit
+                MajorWithMinorVersionsLimit     = $documentLibrary.MajorWithMinorVersionsLimit
                 Notes                           = $null
             }
         }
-    }
-    catch {
-        # Store the result
+    } catch {
+        # Store the failed result
         $results += [PSCustomObject]@{
             SiteTitle                       = $site.Title
             SiteUrl                         = $site.Url
