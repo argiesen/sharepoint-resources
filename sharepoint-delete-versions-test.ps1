@@ -3,7 +3,7 @@
 $clientId = "c00e64bc-4761-4c36-b358-3119fea350e5"
 $VersionsToKeep = 5 # Does not include current version
 
-$testFiles = Import-Csv "C:\Working\TestFiles.csv"
+$testFiles = Import-Csv "TestFiles.csv"
 
 foreach ($testFile in $testFiles){
     try {
