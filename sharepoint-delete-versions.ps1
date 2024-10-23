@@ -1,6 +1,6 @@
 # PnP module must be installed
 # Config Parameters
-$SiteURL = "https://m365x29955680.sharepoint.com/sites/ContosoBrand"
+$SiteURL = "https://m365x97415188.sharepoint.com/sites/ContosoBrand"
 $clientId = "c00e64bc-4761-4c36-b358-3119fea350e5"
 $VersionsToKeep = 5 # Does not include current version
 
