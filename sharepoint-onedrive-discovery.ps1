@@ -1,13 +1,13 @@
-$EntraList = Import-Csv "C:\Temp\AAA\exportUsers_2024-2-16.csv"
-$File1 = Import-Csv "C:\Temp\AAA\User Home Directories.csv"
-$File2 = Import-Csv "C:\Temp\AAA\HomeDrive_OneDrive_Map.csv"
+$EntraList = Import-Csv "exportUsers.csv"
+$File1 = Import-Csv "UserHomeDirectories.csv"
+$File2 = Import-Csv "HomeDriveOneDriveMap.csv"
 $Output = @()
 
 # FolderPath = 1: Directory, 2: FolderName
 
 #File1
 foreach ($record in $File2){
-    $FolderPath = "\\aaasan\H$\" + $record.FolderName
+    $FolderPath = "\\san\H$\" + $record.FolderName
     $Output += $record | Select-Object @{l='FullName';e={$_.FULLNAME}},@{l='JobTitle';e={$_.JOBTITLE}},@{l='Department';e={$_.Department}},@{l='OneDriveURL';e={$_.OneDriveURL}},@{l='FolderPath';e={$FolderPath}}
 }
 
@@ -59,7 +59,7 @@ $Output | Export-Csv -NoTypeInformation OutputFinal.csv
 
 # Overlake
 # Get additional info from AD
-$Output = Import-Csv File07_FolderSizing.csv
+$Output = Import-Csv File01_FolderSizing.csv
 foreach ($record in $Output | Where-Object DisplayName -eq ""){
     $adOutput = $null
     $adOutput = Get-AdUser -Identity (Split-Path $record.UserFolderPath -Leaf) -Properties * | Select-Object displayName,samAccountName,userPrincipalName,title,department
@@ -78,7 +78,7 @@ foreach ($record in $Output | Where-Object DisplayName -eq ""){
 
 Connect-PnPOnline overlakehospital.sharepoint.com -Interactive
 
-$Output = Import-Csv File07_FolderSizing-2024.02.17.csv
+$Output = Import-Csv File01_FolderSizing_01.csv
 foreach ($record in $Output | Where-Object userPrincipalName -ne ""){
     $record.OneDriveURL = (Get-PnPUserProfileProperty -Account $record.userPrincipalName).PersonalUrl
 }
