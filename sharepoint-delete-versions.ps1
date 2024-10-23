@@ -1,11 +1,12 @@
 # PnP module must be installed
 # Config Parameters
 $SiteURL = "https://m365x29955680.sharepoint.com/sites/ContosoBrand"
+$clientId = "c00e64bc-4761-4c36-b358-3119fea350e5"
 $VersionsToKeep = 5 # Does not include current version
 
 Try {
     # Connect to PnP Online
-    Connect-PnPOnline -Url $SiteURL -Interactive
+    Connect-PnPOnline -Url $SiteURL -Interactive -ClientId $clientId
  
     # Get the Context
     $context = Get-PnPContext
