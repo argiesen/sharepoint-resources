@@ -79,7 +79,7 @@ foreach ($site in $siteCollections){
 # Stop the stopwatch and display the total runtime
 $stopwatch.Stop()
 $finalTime = $stopwatch.Elapsed
-Write-Host "Total Runtime: $($finalTime.Hours)h $($finalTime.Minutes)m $($finalTime.Seconds)s"
+Write-Host "Total Runtime: $($finalTime.Hours)h $($finalTime.Minutes)m $($finalTime.Seconds)s" -ForegroundColor DarkGray
 
 # Export results to CSV
 $outputFile = "FileVersionLimitsReport-$(Get-Date -Format yyyy.MM.dd).csv"
