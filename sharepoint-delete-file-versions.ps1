@@ -21,8 +21,7 @@ $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
 # Get all site collections
 Connect-PnPOnline -Url $tenantAdminUrl -Interactive -ClientId $clientId
-$siteCollections = Get-PnPTenantSite | `
-    Where-Object Url -notmatch "-my.|/appcatalog|/contenttypehub|/search|/personal/|/my/" # Exclude system and OneDrive sites
+$siteCollections = Get-PnPTenantSite
 
 # Exclude certain libraries
 $excludedLists = @("Form Templates", "Preservation Hold Library","Site Assets", "Pages", "Site Pages", "Images", 
