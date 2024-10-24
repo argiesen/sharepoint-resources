@@ -4,11 +4,16 @@ $adminUrl = "https://m365x97415188-admin.sharepoint.com"    # Change this to you
 $clientId = "c00e64bc-4761-4c36-b358-3119fea350e5"          # Change this to the PnP module application ID
 $VersionsToKeep = 5                                         # Change to desired amount. Does not include current version
 
+# Create a stopwatch instance to track the runtime
+$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+
 # Get all SharePoint site collections
 Connect-PnPOnline -Url $adminUrl -Interactive -ClientId $clientId
-$sites = Get-PnPTenantSite
+$sites = Get-PnPTenantSite | Where-Object Url -notmatch "-my.|/appcatalog|/contenttypehub|/search|/personal/|/my/" | Where-Object Template -notmatch "GROUP#0|STS#-1"
 
 foreach ($site in $sites){
+    Write-Host "Processing Site: $($site.Title) ($($site.Url))" -f Blue
+
     try {
         # Connect to PnP Online
         Connect-PnPOnline -Url $site.Url -Interactive -ClientId $clientId
@@ -25,6 +30,10 @@ foreach ($site in $sites){
     
         # Iterate through each document library
         foreach ($documentLibrary in $documentLibraries){
+            # Display the current runtime
+            $elapsedTime = $stopwatch.Elapsed
+            Write-Host "Current Runtime: $($elapsedTime.Hours)h $($elapsedTime.Minutes)m $($elapsedTime.Seconds)s" -f DarkGray
+
             Write-Host "Processing Document Library:"$documentLibrary.Title -f Magenta
     
             # Get All Items from the List - Exclude 'Folder' List Items
@@ -39,31 +48,37 @@ foreach ($site in $sites){
                 $context.Load($versions)
                 $context.ExecuteQuery()
     
-                Write-Host -f Yellow "`tScanning File:"$file.Name
+                Write-Host "`tScanning File:"$file.Name -f Yellow
                 $versionsCount = $versions.Count
                 $versionsToDelete = $versionsCount - $VersionsToKeep
                 If($versionsToDelete -gt 0){
-                    Write-Host -f Cyan "`t Total Number of Versions of the File:" $versionsCount
+                    Write-Host "`t Total Number of Versions of the File:" $versionsCount -f Cyan
                     $versionCounter = 0
 
                     # Delete versions
                     For($i=0; $i -lt $versionsToDelete; $i++){
                         If($versions[$versionCounter].IsCurrentVersion){
                         $versionCounter++
-                        Write-Host -f Magenta "`t`t Retaining Current Major Version:"$versions[$versionCounter].VersionLabel
+                        Write-Host "`t`t Retaining Current Major Version:"$versions[$versionCounter].VersionLabel -f Magenta
                         Continue
                         }
-                        Write-Host -f Cyan "`t Deleting Version:" $versions[$versionCounter].VersionLabel
+                        Write-Host "`t Deleting Version:" $versions[$versionCounter].VersionLabel -f Cyan
                         $versions[$versionCounter].DeleteObject()
                         "{0} : {1} : {2}/{3} (v{4})" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $site.Url, $documentLibrary.Title, $file.Name, $versions[$versionCounter].VersionLabel | Out-File VersionDeletion.log -Append
                     }
 
                     $context.ExecuteQuery()
-                    Write-Host -f Green "`t Version History is cleaned for the File:"$file.Name
+                    Write-Host "`t Version History is cleaned for the File:"$file.Name -f Green
                 }
             }
         }
     } Catch {
-        Write-Host -f Red "Error Cleaning up Version History!" $_.Exception.Message
+        Write-Host "Error Cleaning up Version History!" $_.Exception.Message -f Red
     }
 }
+
+# Stop the stopwatch and display the total runtime
+$stopwatch.Stop()
+$finalTime = $stopwatch.Elapsed
+Write-Host "Total Runtime: $($finalTime.Hours)h $($finalTime.Minutes)m $($finalTime.Seconds)s"
+Write-Host "Deletion logs have been saved to VersionDeletion.log"
