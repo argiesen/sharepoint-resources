@@ -39,7 +39,7 @@ foreach ($site in $sites){
             Write-Host "Processing Document Library:"$documentLibrary.Title -f Magenta
     
             # Get All Items from the List - Exclude 'Folder' List Items
-            $listItems = Get-PnPListItem -List $documentLibrary -PageSize 2000 | Where-Object { $_.FileSystemObjectType -eq "File" }
+            $listItems = Get-PnPListItem -List $documentLibrary -PageSize 5000 | Where-Object { $_.FileSystemObjectType -eq "File" }
     
             # Loop through each file
             foreach ($item in $listItems){
@@ -75,7 +75,8 @@ foreach ($site in $sites){
             }
         }
     } Catch {
-        Write-Host "Error Cleaning up Version History!" $_.Exception.Message -f Red
+        "{0} : {1} : {2}/{3} (v{4})" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $site.Url, $documentLibrary.Title, $file.Name, $versions[$versionCounter].VersionLabel, $_.Exception.Message | Out-File VersionDeletionError.log -Append
+        Write-Host "Error Cleaning up Version History:" $_.Exception.Message -f Red
     }
 }
 
