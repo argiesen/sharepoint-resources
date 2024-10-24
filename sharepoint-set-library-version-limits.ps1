@@ -48,7 +48,7 @@ foreach ($site in $siteCollections){
                 # Enable versioning if not already enabled
                 if (-not $list.EnableVersioning) {
                     Write-Host "Enabling versioning for list: $($list.Title)"
-                    Set-PnPList -Identity $list.Title -EnableVersioning $true
+                    Set-PnPList -Identity $list.Title -EnableVersioning $true | Out-Null
                 }
             }
 
