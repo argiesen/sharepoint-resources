@@ -5,6 +5,7 @@ $clientId = "c00e64bc-4761-4c36-b358-3119fea350e5"          # Change this to the
 $VersionsToKeep = 5                                         # Change to desired amount. Does not include current version
 
 # Get all SharePoint site collections
+Connect-PnPOnline -Url $adminUrl -Interactive -ClientId $clientId
 $sites = Get-PnPTenantSite
 
 foreach ($site in $sites){
