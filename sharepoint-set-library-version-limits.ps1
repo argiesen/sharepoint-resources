@@ -10,7 +10,7 @@
 # Config Parameters
 $tenantAdminUrl = "https://m365x97415188-admin.sharepoint.com"  # Change this to your admin center URL
 $clientId = "c00e64bc-4761-4c36-b358-3119fea350e5"              # Change this to the PnP module application ID
-$enableVersioning = $false                                      # Enable versioning if not enabled
+$enableVersioning = $true                                       # Enable versioning if not enabled
 $maxVersions = 100                                              # Maximum number of major versions
 $minorVersionsLimit = 10                                        # Maximum number of minor versions
 
@@ -28,12 +28,12 @@ foreach ($site in $siteCollections){
     # Set document library counter to 0
     $i = 0
 
-    try{
+    try {
         # Connect to the site collection
         Connect-PnPOnline -Url $site.Url -Interactive -ClientId $clientId
         
         # Get document libraries
-        $documentLibraries = Get-PnPList | Where-Object { $_.BaseTemplate -eq 101 -and $_.Title -notin $excludedLists -and $_.Hidden -eq $false } # BaseTemplate 101 is for document libraries
+        $documentLibraries = Get-PnPList | Where-Object { $_.BaseType -eq "DocumentLibrary" -and $_.Title -notin $excludedLists -and $_.Hidden -eq $false }
         
         # Iterate through document libraries
         foreach ($documentLibrary in $documentLibraries){
@@ -59,12 +59,13 @@ foreach ($site in $siteCollections){
                 # Set the major and minor version limits
                 Set-PnPList -Identity $documentLibrary.Title `
                     -MajorVersions $maxVersions `
-                    -MinorVersions $minorVersionsLimit
+                    -MinorVersions $minorVersionsLimit | Out-Null
             } else {
                 Write-Host "Skipping document library: Versioning not enabled on $($site.Title)/$($documentLibrary.Title)" -ForegroundColor Red
             }
         }
-    }catch{
+    } catch {
+        "{0} : {1} : {3}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $site.Url,$_.Exception.Message | Out-File LibraryVersionSetError.log -Append
         Write-Host "Error accessing site: $($site.Url) - $_" -ForegroundColor Red
     }
 }
