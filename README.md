@@ -10,7 +10,7 @@ PowerShell 7.x is required for the PnP module. Confirm you are running PowerShel
 
 If the version is 5.x.x [install the PowerShell 7.x MSI package](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4#installing-the-msi-package).
 
-### 1. Update/install the PnP module
+### 2. Update/install the PnP module
 To install the module fresh:
 ```
 Install-Module -Name PnP.PowerShell
@@ -21,7 +21,7 @@ To date an existing installation to the latest:
 Update-Module -Name PnP.PowerShell
 ```
 
-### 2. Create the app registration
+### 3. Create the app registration
 
 This will prompt for admin consent to grant permissions to the app registration. A global administrator is required to run this command or approve the consent request.
 
@@ -31,7 +31,7 @@ https://pnp.github.io/powershell/articles/registerapplication.html#automatically
 Register-PnPEntraIDAppForInteractiveLogin -Tenant [yourtenant].onmicrosoft.com -Interactive -ApplicationName "PnP Module" 
 ```
 
-### 3. Connect using Interactive Authentication and specify the ClientId
+### 4. Connect using Interactive Authentication and specify the ClientId
 
 Now when connecting to a site, specify ```-ClientId``` with the application ID from the app registration.
 
