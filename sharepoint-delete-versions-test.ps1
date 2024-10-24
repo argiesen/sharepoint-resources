@@ -46,7 +46,7 @@ foreach ($testFile in $testFiles){
                         $versionCounter = 0
 
                         # Delete versions
-                        for($i=0; $i -lt $versionsToDelete; $i++){
+                        for ($i=0; $i -lt $versionsToDelete; $i++){
                             If($versions[$versionCounter].IsCurrentVersion){
                                 $versionCounter++
                                 Write-Host -f Magenta "`t`t Retaining Current Major Version:"$versions[$versionCounter].VersionLabel
