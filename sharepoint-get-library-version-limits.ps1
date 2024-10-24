@@ -9,7 +9,7 @@
 
 # Config Parameters
 $tenantAdminUrl = "https://m365x97415188-admin.sharepoint.com"  # Change this to your admin center URL
-$clientId = "c00e64bc-4761-4c36-b358-3119fea350e5"              # Change this to the PnP module application ID
+$clientId       = "c00e64bc-4761-4c36-b358-3119fea350e5"        # Change this to the PnP module application ID
 
 # Create a stopwatch instance to track the runtime
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
