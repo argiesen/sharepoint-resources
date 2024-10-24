@@ -9,7 +9,9 @@ $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
 # Get all SharePoint site collections
 Connect-PnPOnline -Url $adminUrl -Interactive -ClientId $clientId
-$sites = Get-PnPTenantSite | Where-Object Url -notmatch "-my.|/appcatalog|/contenttypehub|/search|/personal/|/my/" | Where-Object Template -notmatch "GROUP#0|STS#-1"
+$sites = Get-PnPTenantSite | `
+    Where-Object Url -notmatch "-my.|/appcatalog|/contenttypehub|/search|/personal/|/my/" | `   # Exclude system and OneDrive sites
+    Where-Object Template -notmatch "GROUP#0|STS#-1"                                            # Exclude Teams group sites and system templates
 
 foreach ($site in $sites){
     Write-Host "Processing Site: $($site.Title) ($($site.Url))" -f Blue
