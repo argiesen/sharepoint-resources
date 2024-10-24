@@ -1,4 +1,4 @@
-# Sharepoint Migration Scripts
+# Sharepoint Scripts
 
 ## PnP Module
 
