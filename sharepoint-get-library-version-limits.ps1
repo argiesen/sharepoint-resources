@@ -32,7 +32,7 @@ foreach ($site in $siteCollections){
     # Set document library counter to 0
     $i = 0
 
-    try{
+    try {
         # Connect to the site collection
         Connect-PnPOnline -Url $site.Url -Interactive -ClientId $clientId
         
@@ -60,7 +60,7 @@ foreach ($site in $siteCollections){
                 Notes                           = $null
             }
         }
-    }catch{
+    } catch {
         # Store the failed result
         $results += [PSCustomObject]@{
             SiteTitle                       = $site.Title
@@ -73,6 +73,7 @@ foreach ($site in $siteCollections){
             Notes                           = "$_"
         }
 
+        "{0} : {1} : {3}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $site.Url,$_.Exception.Message | Out-File LibraryVersionGetError.log -Append
         Write-Host "Error accessing site: $($site.Url) - $_" -ForegroundColor Red
     }
 }
