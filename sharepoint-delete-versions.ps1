@@ -95,9 +95,9 @@ foreach ($site in $siteCollections){
 # Stop the stopwatch and display the total runtime
 $stopwatch.Stop()
 $finalTime = $stopwatch.Elapsed
-Write-Host "Total Runtime: $($finalTime.Hours)h $($finalTime.Minutes)m $($finalTime.Seconds)s"
+Write-Host "Total Runtime: $($finalTime.Hours)h $($finalTime.Minutes)m $($finalTime.Seconds)s" -ForegroundColor DarkGray
 
-Write-Host "Deletion logs have been saved to VersionDeletion.log"
+Write-Host "Deletion logs have been saved to VersionDeletion.log" -ForegroundColor Green
 
 # Disconnect from SharePoint Online
 Disconnect-PnPOnline
