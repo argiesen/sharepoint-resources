@@ -6,6 +6,7 @@ $VersionsToKeep = 5 # Does not include current version
 $testFiles = Import-Csv "TestFiles.csv"
 
 foreach ($testFile in $testFiles){
+    Write-Host "Processing test file:" $testFile.FileName
     try {
         # Connect to PnP Online
         Connect-PnPOnline -Url $testFile.SiteURL -Interactive -ClientId $clientId
@@ -36,31 +37,29 @@ foreach ($testFile in $testFiles){
                 $context.Load($versions)
                 $context.ExecuteQuery()
 
-                if ($file.Name -ne $testFile.FileName){
-                    break;
-                }
+                if ($file.Name -eq $testFile.FileName){
+                    Write-Host -f Yellow "`tScanning File:"$file.Name
+                    $versionsCount = $versions.Count
+                    $versionsToDelete = $versionsCount - $VersionsToKeep
+                    if ($versionsToDelete -gt 0){
+                        Write-Host -f Cyan "`t Total Number of Versions of the File:" $versionsCount
+                        $versionCounter = 0
 
-                Write-Host -f Yellow "`tScanning File:"$file.Name
-                $versionsCount = $versions.Count
-                $versionsToDelete = $versionsCount - $VersionsToKeep
-                if ($versionsToDelete -gt 0){
-                    Write-Host -f Cyan "`t Total Number of Versions of the File:" $versionsCount
-                    $versionCounter = 0
-
-                    # Delete versions
-                    for($i=0; $i -lt $versionsToDelete; $i++){
-                        If($versions[$versionCounter].IsCurrentVersion){
-                            $versionCounter++
-                            Write-Host -f Magenta "`t`t Retaining Current Major Version:"$versions[$versionCounter].VersionLabel
-                            Continue
+                        # Delete versions
+                        for($i=0; $i -lt $versionsToDelete; $i++){
+                            If($versions[$versionCounter].IsCurrentVersion){
+                                $versionCounter++
+                                Write-Host -f Magenta "`t`t Retaining Current Major Version:"$versions[$versionCounter].VersionLabel
+                                Continue
+                            }
+                            Write-Host -f Cyan "`t Deleting Version:" $versions[$versionCounter].VersionLabel
+                            $versions[$versionCounter].DeleteObject()
+                            "{0} : {1} : {2}/{3} (v{4})" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $SiteURL, $documentLibrary.Title, $file.Name, $versions[$versionCounter].VersionLabel | Out-File VersionDeletion.log -Append
                         }
-                        Write-Host -f Cyan "`t Deleting Version:" $versions[$versionCounter].VersionLabel
-                        $versions[$versionCounter].DeleteObject()
-                        "{0} : {1} : {2}/{3} (v{4})" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $SiteURL, $documentLibrary.Title, $file.Name, $versions[$versionCounter].VersionLabel | Out-File VersionDeletion.log -Append
-                    }
 
-                    $context.ExecuteQuery()
-                    Write-Host -f Green "`t Version History is cleaned for the File:"$file.Name
+                        $context.ExecuteQuery()
+                        Write-Host -f Green "`t Version History is cleaned for the File:"$file.Name
+                    }
                 }
             }
         }
