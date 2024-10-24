@@ -32,7 +32,7 @@ foreach ($site in $siteCollections){
     # Set document library counter to 0
     $i = 0
 
-    try{
+    try {
         # Connect to the site collection
         Connect-PnPOnline -Url $site.Url -Interactive -ClientId $clientId
 
@@ -69,11 +69,11 @@ foreach ($site in $siteCollections){
 
             if ($Error){
                 Write-Host "Error: $($Error.Exception.Message)" -ForegroundColor Red
-            }else{
+            } else {
                 Write-Host "Completed" -ForegroundColor Green
             }
         }
-    }catch{
+    } catch {
         Write-Host "Error accessing site: $($site.Url) - $_" -ForegroundColor Red
     }
 }
