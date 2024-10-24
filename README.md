@@ -11,12 +11,12 @@ PowerShell 7.x is required for the PnP module. Confirm you are running PowerShel
 If the version is 5.x.x [install the PowerShell 7.x MSI package](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4#installing-the-msi-package).
 
 ### 2. Update/install the PnP module
-To install the module fresh:
+To install the module:
 ```
 Install-Module -Name PnP.PowerShell
 ```
 
-To date an existing installation to the latest:
+To update an existing installation to the latest version:
 ```
 Update-Module -Name PnP.PowerShell
 ```
