@@ -14,7 +14,7 @@ $VersionsToKeep = 5                                             # Change to desi
 
 # Retry parameters
 $maxRetryAttempts = 3
-$retryDelaySeconds = 5
+$retryDelaySeconds = 3
 
 # Create a stopwatch instance to track the runtime
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
