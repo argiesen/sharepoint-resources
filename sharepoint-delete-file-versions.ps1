@@ -63,33 +63,33 @@ foreach ($site in $siteCollections){
                 $context.Load($versions)
                 $context.ExecuteQuery()
     
-                Write-Host "`tScanning File:"$file.Name -ForegroundColor Yellow
+                Write-Host "`tScanning File: $($file.Name)" -ForegroundColor Yellow
                 $versionsCount = $versions.Count
                 $versionsToDelete = $versionsCount - $VersionsToKeep
                 If($versionsToDelete -gt 0){
-                    Write-Host "`t Total Number of Versions of the File:" $versionsCount -ForegroundColor Cyan
+                    Write-Host "`t Total Number of Versions of the File: $versionsCount" -ForegroundColor Cyan
                     $versionCounter = 0
 
                     # Delete versions
                     For($i=0; $i -lt $versionsToDelete; $i++){
                         If($versions[$versionCounter].IsCurrentVersion){
                         $versionCounter++
-                        Write-Host "`t`t Retaining Current Major Version:"$versions[$versionCounter].VersionLabel -ForegroundColor Magenta
+                        Write-Host "`t`t Retaining Current Major Version: $($versions[$versionCounter].VersionLabel)" -ForegroundColor Magenta
                         Continue
                         }
-                        Write-Host "`t Deleting Version:" $versions[$versionCounter].VersionLabel -ForegroundColor Cyan
+                        Write-Host "`t Deleting Version: $($versions[$versionCounter].VersionLabel)"  -ForegroundColor Cyan
                         $versions[$versionCounter].DeleteObject()
                         "{0} : {1} : {2}/{3} (v{4})" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $site.Url, $documentLibrary.Title, $file.Name, $versions[$versionCounter].VersionLabel | Out-File VersionDeletion.log -Append
                     }
 
                     $context.ExecuteQuery()
-                    Write-Host "`t Version History is cleaned for the File:"$file.Name -ForegroundColor Green
+                    Write-Host "`t Version History is cleaned for the File: $($file.Name)" -ForegroundColor Green
                 }
             }
         }
     }catch{
         "{0} : {1} : {2}/{3} (v{4})" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $site.Url, $documentLibrary.Title, $file.Name, $versions[$versionCounter].VersionLabel, $_.Exception.Message | Out-File VersionDeletionError.log -Append
-        Write-Host "Error Cleaning up Version History:" $_.Exception.Message -ForegroundColor Red
+        Write-Host "Error Cleaning up Version History: $($_.Exception.Message)"  -ForegroundColor Red
     }
 }
 
