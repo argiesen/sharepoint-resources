@@ -6,6 +6,7 @@
 # PnP module must be installed and up-to-date
 # Install   : Install-Module -Name PnP.PowerShell
 # Update    : Update-Module -Name PnP.PowerShell
+
 # Config Parameters
 $tenantAdminUrl = "https://m365x97415188-admin.sharepoint.com"  # Change this to your admin center URL
 $clientId = "c00e64bc-4761-4c36-b358-3119fea350e5"              # Change this to the PnP module application ID
