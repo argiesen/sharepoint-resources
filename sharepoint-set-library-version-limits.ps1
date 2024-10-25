@@ -21,6 +21,10 @@ $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 Connect-PnPOnline -Url $tenantAdminUrl -Interactive -ClientId $clientId
 $siteCollections = Get-PnPTenantSite
 
+# Exclude certain libraries
+$excludedLists = @("Form Templates", "Preservation Hold Library","Site Assets", "Pages", "Site Pages", "Images", 
+    "Site Collection Documents", "Site Collection Images","Style Library")
+
 # Iterate through site collections
 foreach ($site in $siteCollections){
     Write-Host "Processing Site: $($site.Title) ($($site.Url))" -ForegroundColor Blue
@@ -53,7 +57,7 @@ foreach ($site in $siteCollections){
             }
 
             # Check if the document library supports versioning
-            if ($documentLibrary.EnableVersioning) {
+            if ($documentLibrary.EnableVersioning -or $enableVersioning) {
                 Write-Host "Updating versioning settings for document library: $($documentLibrary.Title)" -ForegroundColor Yellow
 
                 # Set the major and minor version limits
