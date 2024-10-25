@@ -46,9 +46,9 @@ foreach ($site in $siteCollections){
 
             if ($enableVersioning){
                 # Enable versioning if not already enabled
-                if (-not $list.EnableVersioning) {
-                    Write-Host "Enabling versioning for list: $($list.Title)"
-                    Set-PnPList -Identity $list.Title -EnableVersioning $true | Out-Null
+                if (-not $documentLibrary.EnableVersioning) {
+                    Write-Host "Enabling versioning for list: $($documentLibrary.Title)"
+                    Set-PnPList -Identity $documentLibrary.Title -EnableVersioning $true | Out-Null
                 }
             }
 
@@ -65,7 +65,7 @@ foreach ($site in $siteCollections){
             }
         }
     } catch {
-        "{0} : {1} : {3}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $site.Url,$_.Exception.Message | Out-File LibraryVersionSetError.log -Append
+        "{0} : {1} : {2}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $site.Url,$_.Exception.Message | Out-File LibraryVersionSetError.log -Append
         Write-Host "Error accessing site: $($site.Url) - $_" -ForegroundColor Red
     }
 }
