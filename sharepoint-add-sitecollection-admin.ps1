@@ -1,13 +1,16 @@
 #Parameters
-$TenantAdminURL = "https://<tenant>-admin.sharepoint.com"
+$TenantAdminURL = "https://m365x97415188-admin.sharepoint.com"
 $clientId       = "c00e64bc-4761-4c36-b358-3119fea350e5"    
-$SiteCollAdmin  = "user@domain.com"
+$SiteCollAdmin  = "fry@M365x97415188.onmicrosoft.com"
+
+$CsvPath        = "Sites.csv"
 
 #Connect to Admin Center
-Connect-PnPOnline -Url $TenantAdminURL -Interactive -ClientId
+Connect-PnPOnline -Url $TenantAdminURL -Interactive -ClientId $clientId
 
 #Get All Site collections and Iterate through
-$SiteCollections = Import-Csv Sites.csv
+$SiteCollections = Import-Csv $CsvPath
+#$SiteCollections = Get-PnPTenantSite
 foreach($Site in $SiteCollections){ 
     #Add Site collection Admin
     Set-PnPTenantSite -Url $Site.Url -Owners $SiteCollAdmin
