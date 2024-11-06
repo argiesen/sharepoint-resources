@@ -18,6 +18,7 @@ foreach($Site in $SiteCollections){
         Write-host "Added Site Collection Administrator to $($Site.URL)" -ForegroundColor Green
     } catch {
         Write-host "Failed to add Site Collection Administrator to $($Site.URL)" -ForegroundColor Red
+        "{0} : {1} : {2}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $site.Url, $_.Exception.Message | Out-File PermissionAddError.log -Append
     }
 }
 
