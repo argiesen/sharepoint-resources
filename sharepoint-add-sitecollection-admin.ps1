@@ -13,7 +13,11 @@ $SiteCollections = Import-Csv $CsvPath
 #$SiteCollections = Get-PnPTenantSite
 foreach($Site in $SiteCollections){ 
     #Add Site collection Admin
-    Set-PnPTenantSite -Url $Site.Url -Owners $SiteCollAdmin
-    Write-host "Added Site Collection Administrator to $($Site.URL)"
+    try {
+        Set-PnPTenantSite -Url $Site.Url -Owners $SiteCollAdmin
+        Write-host "Added Site Collection Administrator to $($Site.URL)" -ForegroundColor Green
+    } catch {
+        Write-host "Failed to add Site Collection Administrator to $($Site.URL)" -ForegroundColor Red
+    }
 }
 
