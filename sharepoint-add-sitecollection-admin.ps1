@@ -2,7 +2,6 @@
 $TenantAdminURL = "https://m365x97415188-admin.sharepoint.com"
 $clientId       = "c00e64bc-4761-4c36-b358-3119fea350e5"    
 $SiteCollAdmin  = "fry@M365x97415188.onmicrosoft.com"
-
 $CsvPath        = "Sites.csv"
 
 #Connect to Admin Center
