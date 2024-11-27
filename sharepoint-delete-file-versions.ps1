@@ -24,7 +24,7 @@ Connect-PnPOnline -Url $tenantAdminUrl -Interactive -ClientId $clientId
 $siteCollections = Get-PnPTenantSite
 
 # Exclude certain libraries
-$excludedLists = @("Form Templates", "Preservation Hold Library","Site Assets", "Pages", "Site Pages", "Images", "Site Collection Documents", "Site Collection Images","Style Library")
+$excludedLists = @("Form Templates", "Preservation Hold Library","Site Assets", "Pages", "Site Pages", "Images", "Site Collection Documents", "Site Collection Images","Style Library", "User Photos")
 
 # Iterate through site collections
 foreach ($site in $siteCollections){
